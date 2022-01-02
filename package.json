@@ -1,0 +1,26 @@
+{
+  "name": "opabar-dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juan-opazo/opabar-dev.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juan-opazo/opabar-dev/issues"
+  },
+  "homepage": "https://github.com/juan-opazo/opabar-dev#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1048.0"
+  },
+  "engines": {
+    "node": "14.16.0"
+  }
+}
