@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/juan-opazo/opabar-dev#readme",
   "dependencies": {
-    "aws-sdk": "^2.1048.0"
+    "aws-sdk": "^2.1048.0",
+    "express": "^4.17.2"
   },
   "engines": {
     "node": "14.16.0"
