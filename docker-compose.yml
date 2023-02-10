@@ -1,6 +1,21 @@
 version: '3'
 
 services:
+  backend:
+    container_name: django-app
+    build: 
+      context: ./server
+      args:
+       - DEV=true
+    volumes:
+      - ./server/app:/app
+    expose:
+      - 5000
+    ports:
+      - "5000:5000"
+    user: root:root
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:5000"
   frontend:
     container_name: nextjs-app
     build: ./client
@@ -10,3 +25,5 @@ services:
       - 3000
     ports:
       - "3000:3000"
+    depends_on:
+      - backend

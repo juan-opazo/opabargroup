@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Image from 'next/image';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,12 +14,12 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-function Copyright(props: any) {
+const Copyright = (props: any) => {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="https://google.com/">
+        TUPAQU
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -28,7 +29,7 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-export default function SignIn() {
+const SignIn = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -50,11 +51,12 @@ export default function SignIn() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
+          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}> */}
+            <Image alt="opabar" src="/OPABAR_LOGO.png" style={{width:'10rem'}}/>
+            {/* <LockOutlinedIcon /> */}
+          {/* </Avatar> */}
           <Typography component="h1" variant="h5">
-            Sign in
+            Iniciar Sesion
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
@@ -62,7 +64,7 @@ export default function SignIn() {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="Correo Electronico"
               name="email"
               autoComplete="email"
               autoFocus
@@ -72,34 +74,29 @@ export default function SignIn() {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="Contrasena"
               type="password"
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Ingresar
             </Button>
             <Grid container>
-              <Grid item xs>
+              {/* <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
+              </Grid> */}
             </Grid>
           </Box>
         </Box>
@@ -108,3 +105,5 @@ export default function SignIn() {
     </ThemeProvider>
   );
 }
+
+export default SignIn;
