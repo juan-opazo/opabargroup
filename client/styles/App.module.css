@@ -2,8 +2,24 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    background: #fafafa;
+    width: 100vw;
+    border-radius: 4px;
+}
+
+.table_container {
+    max-width: 90%;
 }
 
 .input_container {
     display: flex;
+    justify-content: center;
+    background: #fafafa;
+    margin: 1em;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.sector_select {
+    margin: 1em;
 }

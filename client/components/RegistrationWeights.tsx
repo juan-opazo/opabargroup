@@ -1,6 +1,7 @@
 import * as React from 'react';
 import TableWeightInput from './TableWeightInput';
 import TableWeights from './TableWeights';
+import SectorSelect from './SectorSelect';
 import styles from '@/styles/App.module.css';
 
 
@@ -13,6 +14,7 @@ const RegistrationWeights = () => {
   }
   return (
     <div className={styles.container}>
+      <SectorSelect/>
       <TableWeights data={data}/>
       <TableWeightInput addNewRecord={addNewRecord}/>
     </div>

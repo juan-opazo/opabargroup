@@ -51,6 +51,6 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(models.User, UserAdmin)
-admin.site.register(models.Stock)
-admin.site.register(models.UserStock)
-admin.site.register(models.Investment)
+admin.site.register(models.Sector)
+admin.site.register(models.RegistrationWeight)
+admin.site.register(models.RecordWeight)

@@ -42,70 +42,73 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'username'
 
 
-class Stock(models.Model):
-    """Stock to be used for investments"""
+class Sector(models.Model):
+    """Sector to be used for investments"""
+
+    PASSION_FRUIT = 'PASS'
+    MANGO = 'MANG'
+    CROP_CHOICES = [
+        (PASSION_FRUIT, 'Maracuyá'),
+        (MANGO, 'Mango'),
+    ]
+
     name = models.CharField(max_length=255)
-    code = models.CharField(max_length=15)
-    owners = models.ManyToManyField(
+    area = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        blank=False,
+        null=False
+    )
+    owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        through='UserStock'
+        on_delete=models.CASCADE,
+    )
+    crop = models.CharField(
+        max_length=4,
+        choices=CROP_CHOICES,
+        blank=False,
+        null=False
     )
 
     def __str__(self):
         return self.name
 
 
-class UserStock(models.Model):
-    """Stock per user"""
-    stock = models.ForeignKey(
-        'Stock',
+class RegistrationWeight(models.Model):
+    """Registration for weights"""
+    date_created = models.DateField(blank=False, null=False)
+    name = models.CharField(max_length=255)
+    sector = models.ForeignKey(
+        'Sector',
         on_delete=models.CASCADE,
-    )
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
-    shares = models.DecimalField(
-        max_digits=8,
-        decimal_places=2,
-        blank=False,
-        null=False
     )
 
     def __str__(self):
-        return self.stock.name
+        return self.name
 
 
-class Investment(models.Model):
-    """Investment by user"""
-    CASH = 'CA'
-    FACTORING = 'FA'
-    STOCK = 'ST'
-    TYPE_CHOICES = [
-        (CASH, 'Cash'),
-        (FACTORING, 'Factoring'),
-        (STOCK, 'Stocks'),
-    ]
-    date = models.DateField(blank=False, null=False)
+class RecordWeight(models.Model):
+    """Record of Registration Weight Table"""
+    registration = models.ForeignKey(
+        'RegistrationWeight',
+        on_delete=models.CASCADE,
+    )
+    item = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
     amount = models.DecimalField(
         max_digits=8,
         decimal_places=2,
         blank=False,
         null=False
     )
-    type = models.CharField(
-        max_length=2,
-        choices=TYPE_CHOICES,
+    box = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
         blank=False,
         null=False
     )
-    stock = models.ForeignKey(
-        'Stock',
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
+
+    def __str__(self):
+        return f"{self.registration.name} - {self.item}"
