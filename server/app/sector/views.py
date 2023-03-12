@@ -29,4 +29,4 @@ class SectorViewSet(viewsets.ModelViewSet):
 
     def perform_create_serializer(self):
         """Create a new recipe"""
-        serializer.save(owner=sefl.request.user)
+        serializers.save(owner=self.request.user)

@@ -19,4 +19,4 @@ class SectorDetailSerializer(SectorSerializer):
     """Serializers for sector details."""
 
     class Meta(SectorSerializer.Meta):
-        fields = SectorSerializer.Meta.fields #+ ['description']
+        fields = SectorSerializer.Meta.fields
