@@ -16,7 +16,7 @@ const RegistrationWeights = () => {
     <div className={styles.container}>
       <SectorSelect/>
       <TableWeights data={data}/>
-      <TableWeightInput addNewRecord={addNewRecord}/>
+      <TableWeightInput addNewRecord={addNewRecord} data={data}/>
     </div>
   )
 }

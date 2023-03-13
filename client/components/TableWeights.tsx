@@ -8,21 +8,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styles from '@/styles/App.module.css';
 
-function createData(
-  id: number,
-  weight: number,
-  box: number,
-) {
-  return { id, weight, box };
-}
-
-const rows = [
-  createData(1, 94, 2),
-  createData(2, 37, 2),
-  createData(3, 24, 3),
-  createData(4, 67, 3),
-  createData(5, 49, 3),
-];
 
 export default function TableWeights({ data }: any) {
   return (
