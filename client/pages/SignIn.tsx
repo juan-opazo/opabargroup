@@ -13,6 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useRouter } from 'next/router';
 
 const Copyright = (props: any) => {
   return (
@@ -29,16 +30,57 @@ const Copyright = (props: any) => {
 
 const theme = createTheme();
 
+const getToken = async (payload: any, router: any) => {
+  fetch(`http://localhost:5005/api/user/token/`, {
+    method: "POST",
+    headers: { 
+      'Accept': 'application/json',
+      'Content-Type': 'application/json' 
+    },
+    body: JSON.stringify(payload),
+  })
+  .then(res => {
+    res.json()
+    .then(data => {
+      if (res.ok) {
+        console.log(data);
+        localStorage.setItem('token', data.token);
+        router.push('/');
+
+      } else {
+        console.error(data.non_field_errors[0]);
+      }
+
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  })
+  .catch(err => console.error(err));
+};
+
 const SignIn = () => {
+  const router = useRouter();
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get('email'),
+      email: data.get('username'),
       password: data.get('password'),
     });
+    getToken({
+      username: data.get('username'),
+      password: data.get('password'),
+    }, router)
   };
 
+  React.useEffect(() => {
+    if (localStorage.getItem('token')) {
+      router.push('/');
+    }
+  }, []);
+    
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -63,10 +105,10 @@ const SignIn = () => {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Correo Electronico"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Usuario"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
