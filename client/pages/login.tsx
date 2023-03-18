@@ -36,7 +36,7 @@ const SignIn = () => {
   const router = useRouter();
 
   const getToken = async (payload: any, router: any) => {
-    fetch(`http://localhost:5005/api/user/token/`, {
+    fetch(`http://52.0.138.19:5005/api/user/token/`, {
       method: "POST",
       headers: { 
         'Accept': 'application/json',

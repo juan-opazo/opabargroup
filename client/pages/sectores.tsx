@@ -21,7 +21,7 @@ interface Sector {
   }
 
 const getSectors = async (setSectors: any) => {
-    fetch(`http://localhost:5005/api/sector/sectors/`, {
+    fetch(`http://52.0.138.19:5005/api/sector/sectors/`, {
       method: "GET",
       headers: { 
         'Accept': 'application/json',
