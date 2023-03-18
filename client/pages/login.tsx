@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRouter } from 'next/router';
+import Alert from '@mui/material/Alert';
 
 const Copyright = (props: any) => {
   return (
@@ -30,37 +31,44 @@ const Copyright = (props: any) => {
 
 const theme = createTheme();
 
-const getToken = async (payload: any, router: any) => {
-  fetch(`http://localhost:5005/api/user/token/`, {
-    method: "POST",
-    headers: { 
-      'Accept': 'application/json',
-      'Content-Type': 'application/json' 
-    },
-    body: JSON.stringify(payload),
-  })
-  .then(res => {
-    res.json()
-    .then(data => {
-      if (res.ok) {
-        console.log(data);
-        localStorage.setItem('token', data.token);
-        router.push('/');
+const SignIn = () => {
+  const [hasError, setHasError] = React.useState<Boolean>(false);
+  const router = useRouter();
 
-      } else {
-        console.error(data.non_field_errors[0]);
-      }
-
+  const getToken = async (payload: any, router: any) => {
+    fetch(`http://localhost:5005/api/user/token/`, {
+      method: "POST",
+      headers: { 
+        'Accept': 'application/json',
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify(payload),
+    })
+    .then(res => {
+      res.json()
+      .then(data => {
+        if (res.ok) {
+          console.log(data);
+          localStorage.setItem('token', data.token);
+          router.push('/');
+  
+        } else {
+          console.error(data.non_field_errors[0]);
+          setHasError(true);
+        }
+  
+      })
+      .catch(err => {
+        console.error(err);
+        setHasError(true);
+      });
     })
     .catch(err => {
       console.error(err);
+      setHasError(true);
     });
-  })
-  .catch(err => console.error(err));
-};
-
-const SignIn = () => {
-  const router = useRouter();
+    
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -121,10 +129,9 @@ const SignIn = () => {
               id="password"
               autoComplete="current-password"
             />
-            {/* <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            /> */}
+
+            { hasError ? <Alert severity="error">Usuario o contraseña inválidos.</Alert> : null }
+
             <Button
               type="submit"
               fullWidth
@@ -134,11 +141,6 @@ const SignIn = () => {
               Ingresar
             </Button>
             <Grid container>
-              {/* <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid> */}
             </Grid>
           </Box>
         </Box>

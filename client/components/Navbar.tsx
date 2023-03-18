@@ -13,13 +13,30 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Image from 'next/image';
+import styles from '@/styles/App.module.css';
+import { useRouter } from 'next/router';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = [
+  {
+    label: 'Mis sectores', 
+    path: 'sectores'
+  },
+  {
+    label: 'Registrar Pesos',
+    path: 'registrar-pesos'
+  }
+];
+const settings = [
+  {
+    key: 'logout',
+    label: 'Logout'
+  }
+];
 
 const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const router = useRouter();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -36,12 +53,25 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
 
+  const handlePageSelection = (page: String) => {
+    router.push(`/${page}`);
+    handleCloseNavMenu();
+  }
+
+  const handleSettingSelection = (key: String) => {
+    if (key === 'logout') {
+      localStorage.removeItem('token');
+      router.push('/login');
+    }
+    handleCloseUserMenu();
+  }
+
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl" >
+    <AppBar position="static" >
+      <Container maxWidth="xl" className={styles.navbar_container}>
         <Toolbar disableGutters style={{ justifyContent:'space-between'}}>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-                <Image alt="opabar" src="/OPABAR_LOGO.png" style={{width:'10rem'}} />
+                <Image alt="opabar" src="/OPABAR_LOGO.png" style={{width:'10rem'}} onClick={() => router.push('/')} />
             </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, flex: 0 }}>
@@ -74,23 +104,23 @@ const Navbar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page.label} onClick={() => handlePageSelection(page.path)}>
+                  <Typography textAlign="center">{page.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}>
-                <Image alt="opabar" src="/OPABAR_LOGO.png" style={{width:'10rem'}} />
-            </Box>
+              <Image alt="opabar" src="/OPABAR_LOGO.png" style={{width:'10rem'}} onClick={() => router.push('/')} />
+          </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={page.label}
+                onClick={() => handlePageSelection(page.path)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {page.label}
               </Button>
             ))}
           </Box>
@@ -98,7 +128,7 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar>N</Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -118,8 +148,8 @@ const Navbar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting.key} onClick={() => handleSettingSelection(setting.key)}>
+                  <Typography textAlign="center">{setting.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>

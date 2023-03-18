@@ -20,7 +20,7 @@ export default function Home() {
   const router = useRouter();
   React.useEffect(() => {
     if (!localStorage.getItem('token')) {
-      router.push('/signIn');
+      router.push('/login');
     }
   }, []);
 

@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Navbar from '@/components/Navbar';
 
 interface Sector {
     name: string;
@@ -87,6 +88,8 @@ const SectorPage = () => {
     const [sectors, setSectors] = React.useState([]);
     getSectors(setSectors);
     return (
+      <>
+        <Navbar/>
         <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
           <Grid container spacing={1} sx={{ justifyContent: "center" }}>
             <Grid item xs={12} md={6}>
@@ -99,6 +102,8 @@ const SectorPage = () => {
             </Grid>
           </Grid>
         </Box>
+      </>
+        
       );
 }
 
