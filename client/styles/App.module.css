@@ -5,6 +5,7 @@
     background: #fafafa;
     width: 100vw;
     border-radius: 4px;
+    margin-top: 1em;
 }
 
 .table_container {
@@ -22,4 +23,8 @@
 
 .sector_select {
     margin: 1em;
+}
+
+.navbar_container {
+    background-color: #0e9453;
 }

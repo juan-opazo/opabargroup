@@ -10,10 +10,20 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import styles from '@/styles/Home.module.css';
 import Link from '@mui/material/Link';
+import React from 'react';
+import { useRouter } from 'next/router';
+import Navbar from '@/components/Navbar';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const router = useRouter();
+  React.useEffect(() => {
+    if (!localStorage.getItem('token')) {
+      router.push('/login');
+    }
+  }, []);
+
   return (
     <>
       <Head>
@@ -22,7 +32,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Navbar/>
       <main className={styles.main}>
+        
       <Box sx={{ width: '100%' }}>
         <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 8, md: 10 }}>
           <Grid item xs={12} sm={4} md={3}>
