@@ -13,40 +13,46 @@ interface Sector {
     area: number;
   }
 
-  const getSectors = async (setSectors: any) => {
-    fetch(`http://52.0.138.19:5005/api/sector/sectors/`, {
-      method: "GET",
-      headers: { 
-        'Accept': 'application/json',
-        'Authorization': 'Token 49516f48f7f6645b11ff98d9d85aa4df7f88311a' 
-      },
-    })
-    .then(res => {
-      res.json()
-      .then(data => {
-        if (res.ok) {
-        //   console.log(data);
-          setSectors([...data]);
-        } else {
-          console.error(data);
-        }
-
-      })
-      .catch(err => {
-        console.error(err);
-      });
-    })
-    .catch(err => console.error(err));
-  };
-
-export default function SectorSelect() {
-    const [sectors, setSectors] = React.useState([]);
+export default function SectorSelect({ updateSectorSelected }: any) {
+    const [sectors, setSectors] = React.useState<Sector[]>([]);
     const [sectorSelected, setSectorSelected] = React.useState('');
+    const [hasSectors, setHasSectors] = React.useState<Boolean>(true);
 
-    getSectors(setSectors);
+    const getSectors = async () => {
+      fetch(`http://52.0.138.19:5005/api/sector/sectors/`, {
+        method: "GET",
+        headers: { 
+          'Accept': 'application/json',
+          'Authorization': `Token ${localStorage.getItem('token')}` 
+        },
+      })
+      .then(res => {
+        res.json()
+        .then(data => {
+          if (res.ok) {
+            console.log(data);
+            if (data.length === 0) {
+              setHasSectors(false);
+              return;
+            }
+            setSectors([...data]);
+          } else {
+            console.error(data);
+          }
+  
+        })
+        .catch(err => {
+          console.error(err);
+        });
+      })
+      .catch(err => console.error(err));
+    };
+
+    if (sectors.length === 0 && hasSectors) getSectors();
 
     const handleChange = (event: SelectChangeEvent) => {
         console.log(event.target.value);
+        updateSectorSelected(event.target.value);
         setSectorSelected(event.target.value as string);
     };
 
@@ -57,8 +63,8 @@ export default function SectorSelect() {
     };
 
     return (
-        <Box sx={{ minWidth: 120 }} className={styles.sector_select}>
-        <FormControl fullWidth>
+        <Box sx={{ minWidth: 120 }} className={styles.table_header_item}>
+          <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Sector</InputLabel>
             <Select
             labelId="demo-simple-select-label"
@@ -67,9 +73,9 @@ export default function SectorSelect() {
             label="Sector"
             onChange={handleChange}
             >
-                {generateSectorItems()}
+              {generateSectorItems()}
             </Select>
-        </FormControl>
+          </FormControl>
         </Box>
     );
 }

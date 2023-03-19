@@ -9,10 +9,12 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Navbar from '@/components/Navbar';
+import withAuth from '@/hocs/withAuth';
+import SectorForm from '@/components/SectorForm';
 
 interface Sector {
     name: string;
@@ -20,47 +22,7 @@ interface Sector {
     area: number;
   }
 
-const getSectors = async (setSectors: any) => {
-    fetch(`http://52.0.138.19:5005/api/sector/sectors/`, {
-      method: "GET",
-      headers: { 
-        'Accept': 'application/json',
-        'Authorization': 'Token 49516f48f7f6645b11ff98d9d85aa4df7f88311a' 
-      },
-    })
-    .then(res => {
-      res.json()
-      .then(data => {
-        if (res.ok) {
-          console.log(data);
-          setSectors([...data]);
-        } else {
-          console.error(data);
-        }
-
-      })
-      .catch(err => {
-        console.error(err);
-      });
-    })
-    .catch(err => console.error(err));
-  };
-
 function generate(sectors: Sector[]) {
-
-    // const sectors = [
-    //     {
-    //         name: "Sector A",
-    //         crop: "Maracuyá",
-    //         area: 23.4
-    //     },
-    //     {
-    //         name: "Sector B",
-    //         crop: "Mango",
-    //         area: 2.1
-    //     },
-    // ]
-    // if (!sectors) return null;
     return sectors.map((sector) => 
         <ListItem
             key={sector.name}
@@ -78,6 +40,7 @@ function generate(sectors: Sector[]) {
             <ListItemText
             primary={sector.name}
             secondary={null}
+            sx={{color:'#0f0f0f'}}
             />
         </ListItem>
     );
@@ -85,20 +48,55 @@ function generate(sectors: Sector[]) {
 
 
 const SectorPage = () => {
-    const [sectors, setSectors] = React.useState([]);
-    getSectors(setSectors);
+    const [sectors, setSectors] = React.useState<Sector[]>([]);
+    const [hasSectors, setHasSectors] = React.useState<Boolean>(true);
+
+    const getSectors = async () => {
+      fetch(`http://52.0.138.19:5005/api/sector/sectors/`, {
+        method: "GET",
+        headers: { 
+          'Accept': 'application/json',
+          'Authorization': `Token ${localStorage.getItem('token')}` 
+        },
+      })
+      .then(res => {
+        res.json()
+        .then(data => {
+          if (res.ok) {
+            console.log(data);
+            if (data.length === 0) {
+              setHasSectors(false);
+              return;
+            }
+            setSectors([...data]);
+          } else {
+            console.error(data);
+          }
+  
+        })
+        .catch(err => {
+          console.error(err);
+        });
+      })
+      .catch(err => console.error(err));
+    };
+
+    const handleAddButton = () => {
+
+    }
+
+    if (sectors.length === 0 && hasSectors) getSectors();
+
     return (
       <>
         <Navbar/>
         <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
           <Grid container spacing={1} sx={{ justifyContent: "center" }}>
             <Grid item xs={12} md={6}>
-              <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
-                Avatar with text and icon
-              </Typography>
                 <List>
                   {generate(sectors)}
                 </List>
+                <SectorForm btnTitle="CREAR SECTOR"/>
             </Grid>
           </Grid>
         </Box>
@@ -107,4 +105,4 @@ const SectorPage = () => {
       );
 }
 
-export default SectorPage;
+export default withAuth(SectorPage); 

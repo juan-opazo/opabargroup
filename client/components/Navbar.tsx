@@ -24,6 +24,10 @@ const pages = [
   {
     label: 'Registrar Pesos',
     path: 'registrar-pesos'
+  },
+  {
+    label: 'Mis Registros',
+    path: 'registros'
   }
 ];
 const settings = [

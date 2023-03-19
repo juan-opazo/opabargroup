@@ -10,6 +10,7 @@ import styles from '@/styles/App.module.css';
 
 
 export default function TableWeights({ data }: any) {
+  data.sort((a: any, b: any) => a.item - b.item);
   return (
     <TableContainer component={Paper} className={styles.table_container}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -27,7 +28,7 @@ export default function TableWeights({ data }: any) {
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.id}
+                {row.item}
               </TableCell>
               <TableCell align="right">{row.weight}</TableCell>
               <TableCell align="right">{row.box}</TableCell>
