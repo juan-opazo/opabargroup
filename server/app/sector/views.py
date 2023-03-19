@@ -18,7 +18,7 @@ class SectorViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Retrieve sectors for authenticated user"""
-        return self. queryset.filter(owner=self.request.user).order_by('-id')
+        return self.queryset.filter(owner=self.request.user).order_by('-id')
 
     def get_serializer_class(self):
         """Return the serializer class for request"""

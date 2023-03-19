@@ -34,50 +34,34 @@ export default function Home() {
       </Head>
       <Navbar/>
       <main className={styles.main}>
-        
-      <Box sx={{ width: '100%' }}>
-        <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 8, md: 10 }}>
-          <Grid item xs={12} sm={4} md={3}>
-            <Card sx={{ minWidth: 200, maxWidth: 250 }}>
-              <CardContent>
-                {/* <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  Word of the Day
-                </Typography> */}
-                <Typography variant="h5" component="div">
-                  Sectores
-                </Typography>
-                {/* <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  adjective
-                </Typography>
-                <Typography variant="body2">
-                  well meaning and kindly.
-                  <br />
-                  {'"a benevolent smile"'}
-                </Typography> */}
-              </CardContent>
-              <CardActions>
-                <Button size="small"><Link color="inherit" href="/sectores">Ver</Link></Button>
-              </CardActions>
-            </Card>
+        <Box sx={{ width: '100%' }}>
+          <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 8, md: 10 }}>
+            <Grid item xs={12} sm={4} md={3}>
+              <Card sx={{ minWidth: 200, maxWidth: 250 }}>
+                <CardContent>
+                  <Typography variant="h5" component="div">
+                    Sectores
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small"><Link color="inherit" href="/sectores">Ver</Link></Button>
+                </CardActions>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={4} md={3}>
+              <Card sx={{ minWidth: 200, maxWidth: 250 }}>
+                <CardContent>
+                  <Typography variant="h5" component="div">
+                    Registro de pesos
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small"><Link color="inherit" href="/registrar-pesos">Ver</Link></Button>
+                </CardActions>
+              </Card>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={4} md={3}>
-            <Card sx={{ minWidth: 200, maxWidth: 250 }}>
-              <CardContent>
-                <Typography variant="h5" component="div">
-                  Registro de pesos
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small"><Link color="inherit" href="/registrar-pesos">Ver</Link></Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
-          
-
-          
-        
+        </Box>
       </main>
     </>
   )

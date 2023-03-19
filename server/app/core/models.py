@@ -93,10 +93,7 @@ class RecordWeight(models.Model):
         'RegistrationWeight',
         on_delete=models.CASCADE,
     )
-    item = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
+    item = models.IntegerField(blank=False, null=False)
     amount = models.DecimalField(
         max_digits=8,
         decimal_places=2,

@@ -30,4 +30,6 @@ urlpatterns = [
     ),
     path('api/user/', include('user.urls')),
     path('api/sector/', include('sector.urls')),
+    path('api/registration-weight/', include('registrationWeight.urls')),
+    path('api/record-weight/', include('recordWeight.urls')),
 ]
