@@ -95,6 +95,10 @@ body {
     rgb(var(--background-start-rgb)); */
 }
 
+header {
+  background-color: #0e9453;
+}
+
 a {
   color: inherit;
   text-decoration: none;
