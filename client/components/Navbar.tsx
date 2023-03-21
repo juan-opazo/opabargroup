@@ -15,6 +15,16 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Image from 'next/image';
 import styles from '@/styles/App.module.css';
 import { useRouter } from 'next/router';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#0e9453',
+    }
+  },
+});
+
 
 const pages = [
   {
@@ -71,7 +81,8 @@ const Navbar = () => {
   }
 
   return (
-    <AppBar position="static" >
+    <ThemeProvider theme={theme}>
+    <AppBar position="static" color="primary">
       <Container maxWidth="xl" className={styles.navbar_container}>
         <Toolbar disableGutters style={{ justifyContent:'space-between'}}>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
@@ -161,6 +172,7 @@ const Navbar = () => {
         </Toolbar>
       </Container>
     </AppBar>
+    </ThemeProvider>
   );
 }
 export default Navbar;
