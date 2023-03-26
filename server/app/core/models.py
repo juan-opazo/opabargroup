@@ -90,7 +90,11 @@ class RegistrationWeight(models.Model):
 
 class RecordWeight(models.Model):
     """Record of Registration Weight Table"""
-    date_created = models.DateTimeField(blank=False, null=False, default=datetime.now())
+    date_created = models.DateTimeField(
+        blank=False,
+        null=False,
+        default=datetime.now()
+    )
     registration = models.ForeignKey(
         'RegistrationWeight',
         on_delete=models.CASCADE,
