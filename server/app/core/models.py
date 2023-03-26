@@ -1,6 +1,7 @@
 """
 Database models.
 """
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -89,11 +90,15 @@ class RegistrationWeight(models.Model):
 
 class RecordWeight(models.Model):
     """Record of Registration Weight Table"""
+    date_created = models.DateTimeField(
+        blank=False,
+        null=False,
+        default=datetime.now()
+    )
     registration = models.ForeignKey(
         'RegistrationWeight',
         on_delete=models.CASCADE,
     )
-    item = models.IntegerField(blank=False, null=False)
     amount = models.DecimalField(
         max_digits=8,
         decimal_places=2,
@@ -108,4 +113,4 @@ class RecordWeight(models.Model):
     )
 
     def __str__(self):
-        return f"{self.registration.name} - {self.item}"
+        return f"{self.registration.name} - ({self.amount}, {self.box})"

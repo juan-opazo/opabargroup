@@ -11,7 +11,7 @@ class RecordWeightSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecordWeight
-        fields = ['id', 'item', 'amount', 'box', 'registration']
+        fields = ['id', 'date_created', 'amount', 'box', 'registration']
         read_only_fields = ['id']
 
 

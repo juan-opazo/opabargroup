@@ -7,10 +7,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styles from '@/styles/App.module.css';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 
 
-export default function TableWeights({ data }: any) {
+export default function TableWeights({ data, deleteRow }: any) {
   data.sort((a: any, b: any) => a.item - b.item);
+
   return (
     <TableContainer component={Paper} className={styles.table_container}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -19,6 +22,7 @@ export default function TableWeights({ data }: any) {
             <TableCell>ITEM</TableCell>
             <TableCell align="right">PESO</TableCell>
             <TableCell align="right">malla/caja</TableCell>
+            <TableCell align="right"></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -32,6 +36,11 @@ export default function TableWeights({ data }: any) {
               </TableCell>
               <TableCell align="right">{row.weight}</TableCell>
               <TableCell align="right">{row.box}</TableCell>
+              <TableCell align="right">
+                <IconButton color="primary" onClick={() => deleteRow(row)} aria-label="edit" >
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
             </TableRow>
           ))}
           <TableRow

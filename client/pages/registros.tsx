@@ -19,7 +19,7 @@ const RegistrationPage = () => {
     const [regWeightSelected, setRegWeightSelected] = React.useState<RegistrationWeight | null>(null);
 
     const getRegWeights = async () => {
-        fetch(`http://52.0.138.19:5005/api/registration-weight/registrationWeights/`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/registration-weight/registrationWeights/`, {
             method: "GET",
             headers: { 
             'Accept': 'application/json',
