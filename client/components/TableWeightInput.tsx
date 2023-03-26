@@ -11,6 +11,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import SaveIcon from '@mui/icons-material/Save';
 import styles from '@/styles/App.module.css';
 import { useRouter } from 'next/router';
+import Alert from '@mui/material/Alert';
 
 interface Record {
     item: number;
@@ -27,14 +28,15 @@ const exportDataToExcel = (data: Record[]) => {
     saveAs(new Blob([excelBuffer]), fileName);
   }  
 
-const TableWeightInput = ({ addNewRecord, data, title, dateCreated, sectorSelected, regWeightSelected }: any) => {
+const TableWeightInput = ({ addNewRecord, data, title, dateCreated, sectorSelected, regWeightSelected, updateData }: any) => {
     const router = useRouter();
-    const [weight, setWeight] = React.useState(null);
-    const [box, setBox] = React.useState(null);
-    const [error, setError] = React. useState(null);
+    const [weight, setWeight] = React.useState("");
+    const [box, setBox] = React.useState("");
+    const [missingFields, setMissingFields] = React.useState(false);
+    const [error, setError] = React.useState(null);
 
     const createRegistrationWeight = async (payload: any) => {
-        return fetch(`http://52.0.138.19:5005/api/registration-weight/registrationWeights/`, {
+        return fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/registration-weight/registrationWeights/`, {
             method: "POST",
             headers: { 
                 'Accept': 'application/json',
@@ -65,8 +67,7 @@ const TableWeightInput = ({ addNewRecord, data, title, dateCreated, sectorSelect
         });
     };
     
-    const createRecordWeights = async (regWeight: any) => {
-        console.warn(data);
+    const createRecordWeights = async (regWeight: any): Promise<Record[]> => {
         const data_not_saved = data.filter((ele: any) => ele.id === undefined);
         const payload = data_not_saved.map(
             (record: any) => ({
@@ -76,51 +77,56 @@ const TableWeightInput = ({ addNewRecord, data, title, dateCreated, sectorSelect
                 registration: regWeight.id
             })
         );
-        console.warn(payload);
-        payload.forEach((ele: any) => {
-            fetch(`http://52.0.138.19:5005/api/record-weight/recordWeights/`, {
+        const promises = payload.map(async (element: any) => {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/record-weight/recordWeights/`, {
                 method: "POST",
                 headers: { 
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': `Token ${localStorage.getItem('token')}` 
                 },
-                body: JSON.stringify(ele),
-            })
-            .then(res => {
-                res.json()
-                .then(result => {
-                    if (res.ok) {
-                        console.log(result);
-                        if (!regWeightSelected) router.push(`/registros`);
-
-                        data = data.map((ele: any) => ele.item === result.item ? {...ele, id: result.id} : ele);
-                    } else {
-                        console.error(result);
-                        setError(result);
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    setError(err);
-                });
-            })
-            .catch(err => {
-                console.error(err);
-                setError(err);
+                body: JSON.stringify(element),
             });
+            const result = await res.json();
+            if (res.ok) {
+                if (!regWeightSelected) router.push(`/registros`);
+            } else {
+                console.error(result);
+                setError(result);
+            }
+            return {
+                ...result, 
+                item: element.item, 
+                weight: element.amount,
+                box: element.box,
+            }
+            
         });
+        const savedRecords = await Promise.all(promises);
+        return savedRecords;
     }
 
     const handleAddButton = () => {
-        if (weight === null || box === null) return;
+        if (weight === "" || box === "") {
+            setMissingFields(true);
+            return;
+        }
         addNewRecord(Number(weight), Number(box));
+        setWeight("");
+        setBox("");
+        setMissingFields(false);
     }
 
     const handleSaveButton = async () => {
         if (regWeightSelected) {
-            console.warn(regWeightSelected);
-            createRecordWeights(regWeightSelected);
+            const new_records_with_ids = await createRecordWeights(regWeightSelected);
+            if (new_records_with_ids.length > 0) {
+                const newData = [
+                    ...data.filter((ele: any) => ele.id ),
+                    ...new_records_with_ids
+                ];
+                updateData(newData);
+            }
             return;
         }
 
@@ -129,7 +135,6 @@ const TableWeightInput = ({ addNewRecord, data, title, dateCreated, sectorSelect
             name: title,
             sector: sectorSelected,
         });
-        console.warn(registrationWeight);
         if (data.length === 0) router.push(`/registros`);
         
         if(!error) {
@@ -156,6 +161,8 @@ const TableWeightInput = ({ addNewRecord, data, title, dateCreated, sectorSelect
                 <TextField id="outlined-basic" style={{'padding': '0.5em'}} label="PESO" variant="outlined" value={weight} onChange={(e: any) => setWeight(e.target.value)} />
                 <TextField id="outlined-basic" style={{'padding': '0.5em'}} label="malla/caja" variant="outlined" value={box} onChange={(e: any) => setBox(e.target.value)} />
             </div>
+
+            { missingFields ? <Alert severity="error">Faltan datos.</Alert> : null }
 
             <div className={styles.input_buttons_container}>
                 <Button sx={{ margin: '1em' }} className={styles.add_row_button} onClick={handleAddButton} variant="contained" size="large"><AddIcon /></Button>
