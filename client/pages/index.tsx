@@ -1,11 +1,7 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import styles from '@/styles/Home.module.css';
@@ -13,8 +9,9 @@ import Link from '@mui/material/Link';
 import React from 'react';
 import { useRouter } from 'next/router';
 import Navbar from '@/components/Navbar';
+import CardMedia from '@mui/material/CardMedia';
+import { CardActionArea } from '@mui/material';
 
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   const router = useRouter();
@@ -23,6 +20,55 @@ export default function Home() {
       router.push('/login');
     }
   }, []);
+
+  const generateCards = () => {
+    const elements = [
+      {
+        imgUrl: "https://opabargroup.s3.amazonaws.com/images/sector.png",
+        label: "Sectores",
+        alt: "sectores",
+        href: "/sectores"
+      },
+      {
+        imgUrl: "https://opabargroup.s3.amazonaws.com/images/registro.png",
+        label: "Registrar pesos",
+        alt: "registrar pesos",
+        href: "/registrar-pesos"
+      },
+      {
+        imgUrl: "https://opabargroup.s3.amazonaws.com/images/mis_registros.png",
+        label: "Mis Registros",
+        alt: "mis registros",
+        href: "/registros"
+      }
+    ]
+    const cards = elements.map( ele => {
+      return <Grid item xs={12} sm={6} md={4} key={ele.href}>
+                <Card sx={{ minWidth: 200, maxWidth: 250 }}>
+                <Link color="inherit" href={ele.href}>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={ele.imgUrl}
+                      alt={ele.alt}
+                    />
+                    <CardContent>
+                      <Typography variant="h5" component="div">
+                        {ele.label}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Link>
+                </Card>
+              </Grid>
+    });
+    return (
+      <>
+        {cards}
+      </>
+    )
+  };
 
   return (
     <>
@@ -36,30 +82,7 @@ export default function Home() {
       <main className={styles.main}>
         <Box sx={{ width: '100%' }}>
           <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 8, md: 10 }}>
-            <Grid item xs={12} sm={4} md={3}>
-              <Card sx={{ minWidth: 200, maxWidth: 250 }}>
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    Sectores
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small"><Link color="inherit" href="/sectores">Ver</Link></Button>
-                </CardActions>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={4} md={3}>
-              <Card sx={{ minWidth: 200, maxWidth: 250 }}>
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    Registro de pesos
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small"><Link color="inherit" href="/registrar-pesos">Ver</Link></Button>
-                </CardActions>
-              </Card>
-            </Grid>
+            {generateCards()}
           </Grid>
         </Box>
       </main>
