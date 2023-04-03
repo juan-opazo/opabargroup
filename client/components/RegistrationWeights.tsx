@@ -20,40 +20,31 @@ const RegistrationWeights = ({ regWeightSelected }: any) => {
     }
   }, [regWeightSelected]);
 
-  const getsavedData = () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/record-weight/recordWeights/`, {
+  const getsavedData = async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/record-weight/recordWeights/`, {
       method: "GET",
       headers: { 
       'Accept': 'application/json',
       'Authorization': `Token ${localStorage.getItem('token')}` 
       },
-    })
-    .then(res => {
-      res.json()
-      .then(result => {
-      if (res.ok) {
-          const data_formatted = result.map(
-            (ele: any) => ({
-              ...ele, 
-              weight:Number(ele.amount), 
-              box:Number(ele.box)
-            })
-          ).filter((ele: any) => ele.registration === regWeightSelected.id);
-          data_formatted.sort((a: any, b: any) => a.id - b.id);
-          for (let i = 0; i < data_formatted.length; i++) {
-            data_formatted[i] = { ...data_formatted[i], item: i + 1};
-          }
-          setData([...data_formatted]);
-      } else {
-          console.error(result);
+    });
+    const result = await res.json();
+    if (res.ok) {
+      const data_formatted = result.map(
+        (ele: any) => ({
+          ...ele, 
+          weight:Number(ele.amount), 
+          box:Number(ele.box)
+        })
+      ).filter((ele: any) => ele.registration === regWeightSelected.id);
+      data_formatted.sort((a: any, b: any) => a.id - b.id);
+      for (let i = 0; i < data_formatted.length; i++) {
+        data_formatted[i] = { ...data_formatted[i], item: i + 1};
       }
-
-      })
-      .catch(err => {
-          console.error(err);
-      });
-    })
-    .catch(err => console.error(err));
+      setData([...data_formatted]);
+    } else {
+        console.error(result);
+    }
   }
 
   const addNewRecord = (weight: number, box: number) => {

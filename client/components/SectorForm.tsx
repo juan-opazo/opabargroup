@@ -84,8 +84,8 @@ export default function SectorForm({ btnTitle }: any) {
           />
           <TextField 
             sx={{ margin: '1em' }} 
-            type="number" 
-            {...register("area", {required: true})} 
+            type="text" 
+            {...register("area", {required: true, pattern: /^\d*\.?\d+$/})} 
             label="Área" 
             variant="outlined" 
           />
