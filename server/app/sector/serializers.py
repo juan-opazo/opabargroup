@@ -16,7 +16,7 @@ class SectorSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create a new sector instance"""
-        owner_id = self.context['request'].user.id  # Get the ID of the current user
+        owner_id = self.context['request'].user.id
         sector = Sector.objects.create(owner_id=owner_id, **validated_data)
         return sector
 
