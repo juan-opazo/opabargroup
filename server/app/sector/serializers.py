@@ -14,6 +14,12 @@ class SectorSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'area', 'crop']
         read_only_fields = ['id']
 
+    def create(self, validated_data):
+        """Create a new sector instance"""
+        owner_id = self.context['request'].user.id  # Get the ID of the current user
+        sector = Sector.objects.create(owner_id=owner_id, **validated_data)
+        return sector
+
 
 class SectorDetailSerializer(SectorSerializer):
     """Serializers for sector details."""

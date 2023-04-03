@@ -52,33 +52,24 @@ const SectorPage = () => {
     const [hasSectors, setHasSectors] = React.useState<Boolean>(true);
 
     const getSectors = async () => {
-      fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/sector/sectors/`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/sector/sectors/`, {
         method: "GET",
         headers: { 
           'Accept': 'application/json',
           'Authorization': `Token ${localStorage.getItem('token')}` 
         },
-      })
-      .then(res => {
-        res.json()
-        .then(data => {
-          if (res.ok) {
-            console.log(data);
-            if (data.length === 0) {
-              setHasSectors(false);
-              return;
-            }
-            setSectors([...data]);
-          } else {
-            console.error(data);
-          }
-  
-        })
-        .catch(err => {
-          console.error(err);
-        });
-      })
-      .catch(err => console.error(err));
+      });
+      const data = await res.json();
+      if (res.ok) {
+        console.log(data);
+        if (data.length === 0) {
+          setHasSectors(false);
+          return;
+        }
+        setSectors([...data]);
+      } else {
+        console.error(data);
+      }
     };
 
     const handleAddButton = () => {
