@@ -32,23 +32,23 @@ const RegistrationPage = () => {
     const searchForSectorName = (id: number, sectors: Sector[]) => sectors.find((s: Sector) => s.id && s.id === id)?.name;
 
     const getSectors = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/sector/sectors/`, {
-          method: "GET",
-          headers: { 
-            'Accept': 'application/json',
-            'Authorization': `Token ${localStorage.getItem('token')}` 
-          },
-        });
-        const data = await res.json();
-        if (res.ok) {
-          if (data.length === 0) {
-            return;
-          }
-          getRegWeights(data);
-        } else {
-          console.error(data);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/sector/sectors/`, {
+        method: "GET",
+        headers: { 
+          'Accept': 'application/json',
+          'Authorization': `Token ${localStorage.getItem('token')}` 
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        if (data.length === 0) {
+          return;
         }
-      };
+        getRegWeights(data);
+      } else {
+        console.error(data);
+      }
+    };
 
     const getRegWeights = async (sectors: Sector[]) => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/registration-weight/registrationWeights/`, {

@@ -12,6 +12,7 @@ import Paper from '@mui/material/Paper';
 import styles from '@/styles/App.module.css';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 interface Record {
     amount: number;
@@ -19,14 +20,34 @@ interface Record {
 }
 
 const DashboardPage = () => {
-    const [records, setRecords] = React.useState<Record[]>([]);
+    const [recordsWeight, setRecordsWeight] = React.useState<Record[]>([]);
+    const [recordsWeightArea, setRecordsWeightArea] = React.useState<Record[]>([]);
 
     React.useEffect(() => {
-        getRegWeights();
+        getSectors();
         
     }, []);
 
-    const getRegWeights = async () => {
+    const getSectors = async () => {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/sector/sectors/`, {
+          method: "GET",
+          headers: { 
+            'Accept': 'application/json',
+            'Authorization': `Token ${localStorage.getItem('token')}` 
+          },
+        });
+        const data = await res.json();
+        if (res.ok) {
+          if (data.length === 0) {
+            return;
+          }
+          getRegWeights(data);
+        } else {
+          console.error(data);
+        }
+      };
+
+    const getRegWeights = async (sectors: any[]) => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/registration-weight/registrationWeights/`, {
             method: "GET",
             headers: { 
@@ -36,13 +57,13 @@ const DashboardPage = () => {
         });
         let data = await res.json()
         if (res.ok) {
-            getRecordWeights(data);
+            getRecordWeights(data, sectors);
         } else {
             console.error(data);
         }
     }
 
-    const getRecordWeights = async (regWeights: any[]) => {
+    const getRecordWeights = async (regWeights: any[], sectors: any[]) => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/record-weight/recordWeights/`, {
           method: "GET",
           headers: { 
@@ -52,14 +73,27 @@ const DashboardPage = () => {
         });
         const result = await res.json();
         if (res.ok) {
-          let data_formatted = result.map(
+          const data = result.map(
             (ele: any) => ({
               ...ele, 
-              amount: Number(ele.amount), 
+              amount: Number(ele.amount),
               date: regWeights.find((r: any) => r.id === ele.registration)!.date_created.split('T')[0],
+              area: Number(sectors.find((s: any) => s.id === regWeights.find((r: any) => r.id === ele.registration)!.sector)!.area)
             })
           )
-          data_formatted = Object.entries(data_formatted.reduce((accumulator: any, current: any) => {
+            console.log(data);
+          const data_for_weight_area: any[] = Object.entries(data.reduce((accumulator: any, current: any) => {
+            const { amount, date, area } = current;
+            if (accumulator[date]) {
+              accumulator[date] += amount / area;
+            } else {
+              accumulator[date] = amount / area;
+            }
+            return accumulator;
+          }, {})).map(([date, amount]) => ({ date, amount })).sort((a, b) => a.date.localeCompare(b.date));
+          setRecordsWeightArea([...data_for_weight_area]);
+
+          const data_for_weight: any[] = Object.entries(data.reduce((accumulator: any, current: any) => {
             const { amount, date } = current;
             if (accumulator[date]) {
               accumulator[date] += amount;
@@ -68,7 +102,9 @@ const DashboardPage = () => {
             }
             return accumulator;
           }, {})).map(([date, amount]) => ({ date, amount })).sort((a, b) => a.date.localeCompare(b.date));
-          setRecords([...data_formatted]);
+          setRecordsWeight([...data_for_weight]);
+
+          
         } else {
             console.error(result);
         } 
@@ -78,6 +114,9 @@ const DashboardPage = () => {
         <>
             <Navbar />
             <Box sx={{ width: '100%', padding: '1em' }}>
+                <Typography variant="h3" component="h4" textAlign="center" sx={{ color: 'black'}}>
+                    Peso por Tiempo
+                </Typography>;
                 <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 8, md: 10 }}>
                     <Grid item xs={12} sm={6} md={6}>
                         <VictoryChart
@@ -86,8 +125,8 @@ const DashboardPage = () => {
                             domainPadding={20}
                         >
                             <VictoryAxis
-                            tickValues={records.map((ele: any) => ele.date)}
-                            tickFormat={records.map((ele: any) => ele.date)}
+                            tickValues={recordsWeight.map((ele: any) => ele.date)}
+                            tickFormat={recordsWeight.map((ele: any) => ele.date)}
                             />
                             <VictoryAxis
                             dependentAxis
@@ -101,7 +140,7 @@ const DashboardPage = () => {
                                 data: { stroke: "#c43a31" },
                                 parent: { border: "1px solid #ccc"}
                             }}
-                            data={records}
+                            data={recordsWeight}
                             x="date"
                             y="amount"
                             />
@@ -117,12 +156,70 @@ const DashboardPage = () => {
                                 </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                {records.map((row: any) => (
+                                {recordsWeight.map((row: any) => (
                                     <TableRow
                                     key={row.date}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                     <TableCell align="right">{row.amount}</TableCell>
+                                    <TableCell align="right">{row.date}</TableCell>
+                                    </TableRow>
+                                ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Grid>
+                </Grid>
+            </Box>
+            <Box sx={{ width: '100%', padding: '1em' }}>
+                <Typography variant="h3" component="h4" textAlign="center" sx={{ color: 'black'}}>
+                    Peso/Area por Tiempo
+                </Typography>;
+                <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 8, md: 10 }}>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <VictoryChart
+                            // adding the material theme provided with Victory
+                            theme={VictoryTheme.material}
+                            domainPadding={20}
+                        >
+                            <VictoryAxis
+                            tickValues={recordsWeightArea.map((ele: any) => ele.date)}
+                            tickFormat={recordsWeightArea.map((ele: any) => ele.date)}
+                            />
+                            <VictoryAxis
+                            dependentAxis
+                            tickFormat={(x) => (`${(x / 1000).toFixed(2)}Tn/ha`)}
+                            style={{
+                                tickLabels: { fontSize: 10 },
+                              }}
+                            />
+                            <VictoryLine
+                            style={{
+                                data: { stroke: "#c43a31" },
+                                parent: { border: "1px solid #ccc"}
+                            }}
+                            data={recordsWeightArea}
+                            x="date"
+                            y="amount"
+                            />
+                        </VictoryChart>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                        <TableContainer component={Paper} className={styles.table_container}>
+                            <Table sx={{ minWidth: 350 }} aria-label="simple table">
+                                <TableHead>
+                                <TableRow>
+                                    <TableCell align="right">PESO TOTAL / Area (Kg/ha)</TableCell>
+                                    <TableCell align="right">FECHA</TableCell>
+                                </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                {recordsWeightArea.map((row: any) => (
+                                    <TableRow
+                                    key={row.date}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                    <TableCell align="right">{(row.amount).toFixed(2)}</TableCell>
                                     <TableCell align="right">{row.date}</TableCell>
                                     </TableRow>
                                 ))}
