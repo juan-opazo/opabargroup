@@ -23,16 +23,13 @@ interface Sector {
 
 const RegistrationPage = () => {
     const [rows, setRows] = React.useState<RegistrationWeight[]>([]);
-    const [hasRegWeights, setHasRegWeights] = React.useState<Boolean>(true);
     const [regWeightSelected, setRegWeightSelected] = React.useState<RegistrationWeight | null>(null);
-    const [sectors, setSectors] = React.useState<Sector[]>([]);
 
-    // React.useEffect(() => {
-    //     getSectors();
-    //     getRegWeights();
-    // }, [sectors]);
+    React.useEffect(() => {
+        getSectors();
+    }, []);
 
-    const searchForSectorName = (id: number) => sectors.find((s: Sector) => s.id && s.id === id)?.name;
+    const searchForSectorName = (id: number, sectors: Sector[]) => sectors.find((s: Sector) => s.id && s.id === id)?.name;
 
     const getSectors = async () => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/sector/sectors/`, {
@@ -47,14 +44,13 @@ const RegistrationPage = () => {
           if (data.length === 0) {
             return;
           }
-          console.log(data);
-          setSectors([...data]);
+          getRegWeights(data);
         } else {
           console.error(data);
         }
       };
 
-    const getRegWeights = async () => {
+    const getRegWeights = async (sectors: Sector[]) => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/registration-weight/registrationWeights/`, {
             method: "GET",
             headers: { 
@@ -64,17 +60,13 @@ const RegistrationPage = () => {
         });
         let data = await res.json()
         if (res.ok) {
-            console.log(data);
             if (data.length === 0) {
-                setHasRegWeights(false);
-            return;
+              return;
             }
-            console.warn(sectors);
             data = data.map((reg: RegistrationWeight) => {
-                reg.sector_name = sectors.length ? searchForSectorName(reg.sector) : '';
+                reg.sector_name = searchForSectorName(reg.sector, sectors);
                 return reg;
             })
-            console.log(data);
             setRows([...data]);
         } else {
             console.error(data);
@@ -86,7 +78,7 @@ const RegistrationPage = () => {
     }
 
     const columns: GridColDef[] = [
-        { field: 'name', headerName: 'Titulo', width: 100 },
+        { field: 'name', headerName: 'Titulo', width: 200 },
         { field: 'sector_name', headerName: 'Sector', width: 100 },
         { field: 'date_created', headerName: 'Fecha', width: 130 },
         {
@@ -100,19 +92,14 @@ const RegistrationPage = () => {
         },
       ];
 
-    if (rows.length === 0 && hasRegWeights) {
-        getSectors();
-        getRegWeights();
-    }
-
     return (
       <>
         <Navbar/>
         <div style={{ height: 400, width: '100%' }}>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-            />
+          <DataGrid
+            rows={rows}
+            columns={columns}
+          />
         </div>
         { regWeightSelected ? <RegistrationWeights regWeightSelected={regWeightSelected}/> : null }
       </>

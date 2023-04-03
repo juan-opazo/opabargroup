@@ -26,11 +26,11 @@ function generate(sectors: Sector[]) {
     return sectors.map((sector) => 
         <ListItem
             key={sector.name}
-            secondaryAction={
-            <IconButton edge="end" aria-label="delete">
-                <DeleteIcon />
-            </IconButton>
-            }
+            // secondaryAction={
+            // <IconButton edge="end" aria-label="delete">
+            //     <DeleteIcon />
+            // </IconButton>
+            // }
         >
             <ListItemAvatar>
             <Avatar>
@@ -39,7 +39,7 @@ function generate(sectors: Sector[]) {
             </ListItemAvatar>
             <ListItemText
             primary={sector.name}
-            secondary={null}
+            secondary={`${sector.area} ha`}
             sx={{color:'#0f0f0f'}}
             />
         </ListItem>

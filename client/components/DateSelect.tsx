@@ -20,8 +20,9 @@ export default function DateSelect({ updateDateCreated }: any) {
                 className={styles.table_header_item}
             >
                     <DatePicker 
-                        label="Basic date picker" 
+                        label="Fecha" 
                         value={value}
+                        format="DD/MM/YYYY"
                         onChange={(newValue: any) => handleDateSelected(newValue)}
                     />
             </LocalizationProvider>

@@ -38,6 +38,10 @@ const pages = [
   {
     label: 'Mis Registros',
     path: 'registros'
+  },
+  {
+    label: 'Dashboard',
+    path: 'dashboard'
   }
 ];
 const settings = [

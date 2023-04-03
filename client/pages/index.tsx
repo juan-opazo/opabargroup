@@ -40,6 +40,12 @@ export default function Home() {
         label: "Mis Registros",
         alt: "mis registros",
         href: "/registros"
+      },
+      {
+        imgUrl: "https://opabargroup.s3.amazonaws.com/images/dashboard.jpg",
+        label: "Dashboard",
+        alt: "dashboard",
+        href: "/dashboard"
       }
     ]
     const cards = elements.map( ele => {
