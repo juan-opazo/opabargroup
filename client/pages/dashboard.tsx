@@ -80,36 +80,39 @@ const DashboardPage = () => {
             <Box sx={{ width: '100%', padding: '1em' }}>
                 <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 8, md: 10 }}>
                     <Grid item xs={12} sm={6} md={6}>
-                    <VictoryChart
-                    // adding the material theme provided with Victory
-                    theme={VictoryTheme.material}
-                    domainPadding={20}
-                >
-                    <VictoryAxis
-                    tickValues={records.map((ele: any) => ele.date)}
-                    tickFormat={records.map((ele: any) => ele.date)}
-                    />
-                    <VictoryAxis
-                    dependentAxis
-                    tickFormat={(x) => (`${x}kg`)}
-                    />
-                    <VictoryLine
-                    style={{
-                        data: { stroke: "#c43a31" },
-                        parent: { border: "1px solid #ccc"}
-                    }}
-                    data={records}
-                    x="date"
-                    y="amount"
-                    />
-                </VictoryChart>
+                        <VictoryChart
+                            // adding the material theme provided with Victory
+                            theme={VictoryTheme.material}
+                            domainPadding={20}
+                        >
+                            <VictoryAxis
+                            tickValues={records.map((ele: any) => ele.date)}
+                            tickFormat={records.map((ele: any) => ele.date)}
+                            />
+                            <VictoryAxis
+                            dependentAxis
+                            tickFormat={(x) => (`${(x / 1000).toFixed(2)}Tn`)}
+                            style={{
+                                tickLabels: { fontSize: 10 },
+                              }}
+                            />
+                            <VictoryLine
+                            style={{
+                                data: { stroke: "#c43a31" },
+                                parent: { border: "1px solid #ccc"}
+                            }}
+                            data={records}
+                            x="date"
+                            y="amount"
+                            />
+                        </VictoryChart>
                     </Grid>
                     <Grid item xs={12} sm={6} md={6}>
                         <TableContainer component={Paper} className={styles.table_container}>
                             <Table sx={{ minWidth: 350 }} aria-label="simple table">
                                 <TableHead>
                                 <TableRow>
-                                    <TableCell align="right">PESO TOTAL</TableCell>
+                                    <TableCell align="right">PESO TOTAL (Kg)</TableCell>
                                     <TableCell align="right">FECHA</TableCell>
                                 </TableRow>
                                 </TableHead>
