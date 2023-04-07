@@ -4,6 +4,7 @@ import withAuth from '@/hocs/withAuth';
 import { DataGrid, GridColDef, GridValueGetterParams, GridCellParams } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import RegistrationWeights from '@/components/RegistrationWeights';
+import { apiUtils } from '@/utils/apiUtils';
 
 
 interface RegistrationWeight {
@@ -32,45 +33,17 @@ const RegistrationPage = () => {
     const searchForSectorName = (id: number, sectors: Sector[]) => sectors.find((s: Sector) => s.id && s.id === id)?.name;
 
     const getSectors = async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/sector/sectors/`, {
-        method: "GET",
-        headers: { 
-          'Accept': 'application/json',
-          'Authorization': `Token ${localStorage.getItem('token')}` 
-        },
-      });
-      const data = await res.json();
-      if (res.ok) {
-        if (data.length === 0) {
-          return;
-        }
+        const data = await apiUtils.getSectors();
         getRegWeights(data);
-      } else {
-        console.error(data);
-      }
     };
 
     const getRegWeights = async (sectors: Sector[]) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/registration-weight/registrationWeights/`, {
-            method: "GET",
-            headers: { 
-            'Accept': 'application/json',
-            'Authorization': `Token ${localStorage.getItem('token')}` 
-            },
-        });
-        let data = await res.json()
-        if (res.ok) {
-            if (data.length === 0) {
-              return;
-            }
-            data = data.map((reg: RegistrationWeight) => {
-                reg.sector_name = searchForSectorName(reg.sector, sectors);
-                return reg;
-            })
-            setRows([...data]);
-        } else {
-            console.error(data);
-        }
+        let data = await apiUtils.getRegistrationWeights();
+        data = data.map((reg: RegistrationWeight) => {
+            reg.sector_name = searchForSectorName(reg.sector, sectors);
+            return reg;
+        })
+        setRows([...data]);
     }
 
     const handleVisibilityClick = (regWeight: RegistrationWeight) => {

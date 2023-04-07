@@ -36,47 +36,27 @@ const SignIn = () => {
   const router = useRouter();
 
   const getToken = async (payload: any, router: any) => {
-    fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/token/`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/user/token/`, {
       method: "POST",
       headers: { 
         'Accept': 'application/json',
         'Content-Type': 'application/json' 
       },
       body: JSON.stringify(payload),
-    })
-    .then(res => {
-      res.json()
-      .then(data => {
-        if (res.ok) {
-          console.log(data);
-          localStorage.setItem('token', data.token);
-          router.push('/');
-  
-        } else {
-          console.error(data.non_field_errors[0]);
-          setHasError(true);
-        }
-  
-      })
-      .catch(err => {
-        console.error(err);
-        setHasError(true);
-      });
-    })
-    .catch(err => {
-      console.error(err);
-      setHasError(true);
     });
-    
+    const data = await res.json()
+    if (res.ok) {
+      localStorage.setItem('token', data.token);
+      router.push('/');
+    } else {
+      console.error(data.non_field_errors[0]);
+      setHasError(true);
+    }
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('username'),
-      password: data.get('password'),
-    });
     getToken({
       username: data.get('username'),
       password: data.get('password'),
