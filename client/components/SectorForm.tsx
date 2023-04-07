@@ -9,6 +9,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import SaveIcon from '@mui/icons-material/Save';
 import styles from '@/styles/App.module.css';
 import { useRouter } from 'next/router';
+import { apiUtils } from '@/utils/apiUtils';
 
 
 type Inputs = {
@@ -46,22 +47,10 @@ export default function SectorForm({ btnTitle }: any) {
   const createSector = async (payload: any) => {
     payload.area = String(payload.area);
     payload.crop = cropSelected;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/sector/sectors/`, {
-        method: "POST",
-        headers: { 
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${localStorage.getItem('token')}` 
-        },
-        body: JSON.stringify(payload),
-    });
-    const result = await res.json();
-    if (res.ok) {
-      router.push(`/sectores`);
-      handleClose();
-    } else {
-        console.error(result);
-    }
+    const data = await apiUtils.createSector(payload);
+    console.log(data);
+    router.push(`/sectores`);
+    handleClose();
   }
 
   return (

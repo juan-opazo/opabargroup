@@ -1,8 +1,6 @@
 import * as React from 'react';
-
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -12,6 +10,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import styles from '@/styles/App.module.css';
 import { useRouter } from 'next/router';
 import Alert from '@mui/material/Alert';
+import { apiUtils } from '@/utils/apiUtils';
+
 
 interface Record {
     item: number;
@@ -36,35 +36,8 @@ const TableWeightInput = ({ addNewRecord, data, title, dateCreated, sectorSelect
     const [error, setError] = React.useState(null);
 
     const createRegistrationWeight = async (payload: any) => {
-        return fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/registration-weight/registrationWeights/`, {
-            method: "POST",
-            headers: { 
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${localStorage.getItem('token')}` 
-            },
-            body: JSON.stringify(payload),
-        })
-        .then(res => {
-            return res.json()
-            .then(data => {
-                if (res.ok) {
-                    console.log(data);
-                    return data;
-                } else {
-                    console.error(data);
-                    setError(data);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                setError(err);
-            });
-        })
-        .catch(err => {
-            console.error(err);
-            setError(err);
-        });
+        const data = await apiUtils.createRegistrationWeight(payload);
+        return data;
     };
     
     const createRecordWeights = async (regWeight: any): Promise<Record[]> => {
@@ -78,29 +51,14 @@ const TableWeightInput = ({ addNewRecord, data, title, dateCreated, sectorSelect
             })
         );
         const promises = payload.map(async (element: any) => {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/record-weight/recordWeights/`, {
-                method: "POST",
-                headers: { 
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${localStorage.getItem('token')}` 
-                },
-                body: JSON.stringify(element),
-            });
-            const result = await res.json();
-            if (res.ok) {
-                if (!regWeightSelected) router.push(`/registros`);
-            } else {
-                console.error(result);
-                setError(result);
-            }
+            const data = await apiUtils.createRecordWeight(element);
+            if (!regWeightSelected) router.push(`/registros`);
             return {
-                ...result, 
+                ...data, 
                 item: element.item, 
                 weight: element.amount,
                 box: element.box,
             }
-            
         });
         const savedRecords = await Promise.all(promises);
         return savedRecords;
