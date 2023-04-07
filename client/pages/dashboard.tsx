@@ -7,7 +7,7 @@ import {
   VictoryTheme, 
   VictoryTooltip, 
   VictoryVoronoiContainer,
-  VictoryAxisProps
+  VictoryLegend
 } from 'victory';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -29,7 +29,10 @@ enum Type {
   AMOUNT_AREA = "amount_area",
 }
 
-const TOTAL = "total";
+const TOTAL = {
+  label: "total",
+  color: "#c43a31",
+};
 
 const colors = [
   "#ff8c00",
@@ -89,14 +92,14 @@ const DashboardPage = () => {
 
       if (accumulator[date].amount[sector_name]) { accumulator[date].amount[sector_name] += amount; } 
       else { accumulator[date].amount[sector_name] = amount; }
-      accumulator[date].amount[TOTAL] = accumulator[date].amount[TOTAL] 
-        ? accumulator[date].amount[TOTAL] + amount 
+      accumulator[date].amount[TOTAL.label] = accumulator[date].amount[TOTAL.label] 
+        ? accumulator[date].amount[TOTAL.label] + amount 
         : amount;
 
       if (accumulator[date].amount_area[sector_name]) { accumulator[date].amount_area[sector_name] += amount / area; } 
       else { accumulator[date].amount_area[sector_name] = amount / area; }
-      accumulator[date].amount_area[TOTAL] = accumulator[date].amount_area[TOTAL] 
-        ? accumulator[date].amount_area[TOTAL] + amount / area 
+      accumulator[date].amount_area[TOTAL.label] = accumulator[date].amount_area[TOTAL.label] 
+        ? accumulator[date].amount_area[TOTAL.label] + amount / area 
         : amount / area;
 
       return accumulator;
@@ -120,6 +123,13 @@ const DashboardPage = () => {
     return Object.entries(aggResults).map(
       ([date, ele]: [string, any]) => date).sort((a, b) => a.localeCompare(b)
     );
+  };
+
+  const generateLegendData = () => {
+    const result = sectorNames.map((sectorName: string, index: number) => 
+      ({ name: sectorName, symbol: { fill: colors[index % colors.length] } })
+    );
+    return [...result, {name: TOTAL.label, symbol: { fill: TOTAL.color}}]
   }
 
   const getRecordsBySectorAndType = (sectorName: string, type: Type) => {
@@ -183,9 +193,9 @@ const DashboardPage = () => {
       )
     });
     const total = createVictoryLine(
-      "#c43a31", 
-      TOTAL, 
-      getRecordsBySectorAndType(TOTAL, type)
+      TOTAL.color, 
+      TOTAL.label, 
+      getRecordsBySectorAndType(TOTAL.label, type)
     )
     return [...result, total];
   }
@@ -213,7 +223,7 @@ const DashboardPage = () => {
       >
         <TableCell align="right">{row.date}</TableCell>
         {sectorNames.map((sectorName: string) => <TableCell key={sectorName} align="right">{row.data[sectorName]?.toFixed(2) || 0}</TableCell>)}
-        <TableCell align="right">{row.data[TOTAL]?.toFixed(2)}</TableCell>
+        <TableCell align="right">{row.data[TOTAL.label]?.toFixed(2)}</TableCell>
       </TableRow>
     ));
   }
@@ -258,6 +268,7 @@ const DashboardPage = () => {
                 }}
               />
               {generateVictoryLines(graph.type)}
+              <VictoryLegend x={30} y={0} orientation="horizontal" gutter={20} data={generateLegendData()} />
             </VictoryChart>
           </Grid>
           {/* TABLE SECTION */}
