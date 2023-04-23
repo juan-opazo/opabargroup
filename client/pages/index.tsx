@@ -25,8 +25,8 @@ export default function Home() {
     const elements = [
       {
         imgUrl: "https://opabargroup.s3.amazonaws.com/images/sector.png",
-        label: "Sectores",
-        alt: "sectores",
+        label: "Campos",
+        alt: "campos",
         href: "/sectores"
       },
       {

@@ -43,12 +43,12 @@ export default function SectorSelect({ updateSectorSelected }: any) {
   return (
     <Box sx={{ minWidth: 120 }} className={styles.table_header_item}>
       <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Sector</InputLabel>
+        <InputLabel id="demo-simple-select-label">Campo</InputLabel>
         <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={sectorSelected}
-        label="Sector"
+        label="Campo"
         onChange={handleChange}
         >
           {generateSectorItems()}

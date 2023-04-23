@@ -28,7 +28,7 @@ const theme = createTheme({
 
 const pages = [
   {
-    label: 'Mis sectores', 
+    label: 'Mis campos', 
     path: 'sectores'
   },
   {
