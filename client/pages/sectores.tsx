@@ -73,7 +73,7 @@ const SectorPage = () => {
                 <List>
                   {generate(sectors)}
                 </List>
-                <SectorForm btnTitle="CREAR SECTOR"/>
+                <SectorForm btnTitle="CREAR CAMPO"/>
             </Grid>
           </Grid>
         </Box>
