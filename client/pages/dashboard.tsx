@@ -36,15 +36,15 @@ const TOTAL = {
 
 const colors = [
   "#ff8c00",
-  "#f44336",
+  "#4caf50",
   "#00bcd4",
   "#9c27b0",
-  "#4caf50",
   "#795548",
   "#2196f3",
   "#ffc107",
   "#673ab7",
   "#cddc39",
+  "#f44336",
 ]
 
 const DashboardPage = () => {
