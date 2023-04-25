@@ -82,7 +82,13 @@ const SignIn = () => {
           }}
         >
           {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}> */}
-            <Image alt="opabar" src="/OPABAR_LOGO.png" style={{width:'10rem'}}/>
+            <Image 
+              alt="opabar" 
+              src="/OPABAR_LOGO.png" 
+              // style={{width:'10rem'}}
+              width={300}
+              height={200}
+            />
             {/* <LockOutlinedIcon /> */}
           {/* </Avatar> */}
           <Typography component="h1" variant="h5">

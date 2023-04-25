@@ -156,9 +156,6 @@ const DashboardPage = () => {
               onMouseOver: () => {
                 return [
                   {
-                    target: "data",
-                    mutation: () => ({style: {fill: "gold", width: 30}})
-                  }, {
                     target: "labels",
                     mutation: () => ({ active: true })
                   }

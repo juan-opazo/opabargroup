@@ -90,7 +90,14 @@ const Navbar = () => {
       <Container maxWidth="xl" className={styles.navbar_container}>
         <Toolbar disableGutters style={{ justifyContent:'space-between'}}>
             <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
-                <Image alt="opabar" src="/OPABAR_LOGO.png" style={{width:'10rem'}} onClick={() => router.push('/')} />
+                <Image 
+                  alt="opabar" 
+                  src="/OPABAR_LOGO.png" 
+                  style={{width:'10rem'}}
+                  width={100}
+                  height={100}
+                  onClick={() => router.push('/')} 
+                />
             </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, flex: 0 }}>
@@ -130,7 +137,14 @@ const Navbar = () => {
             </Menu>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}>
-              <Image alt="opabar" src="/OPABAR_LOGO.png" style={{width:'10rem'}} onClick={() => router.push('/')} />
+              <Image 
+                alt="opabar" 
+                src="/OPABAR_LOGO.png" 
+                style={{width:'10rem'}} 
+                width={100}
+                height={100}
+                onClick={() => router.push('/')} 
+              />
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
