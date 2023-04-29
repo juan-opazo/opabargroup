@@ -31,8 +31,9 @@ const getRegistrationWeights = async () => {
     }
 };
 
-const getRecordWeights = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/record-weight/recordWeights/`, {
+const getRecordWeights = async (queryParams: any = {}) => {
+    const queryString = new URLSearchParams(queryParams).toString();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/record-weight/recordWeights/?${queryString}`, {
       method: "GET",
       headers: { 
       'Accept': 'application/json',

@@ -22,7 +22,9 @@ const RegistrationWeights = ({ regWeightSelected }: any) => {
   }, [regWeightSelected]);
 
   const getsavedData = async () => {
-    const data = await apiUtils.getRecordWeights();
+    const data = await apiUtils.getRecordWeights({
+      'reg-weight': regWeightSelected.id
+    });
     const data_formatted = data.map(
       (ele: any) => ({
         ...ele, 
