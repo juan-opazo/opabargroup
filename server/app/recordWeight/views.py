@@ -18,9 +18,14 @@ class RecordWeightViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Retrieve record weights for authenticated user"""
-        return self.queryset\
-            .filter(registration__sector__owner=self.request.user)\
-            .order_by('-id')
+        registration_weight_id = self.request.GET.get('reg-weight')
+        queryset = self.queryset\
+            .filter(registration__sector__owner=self.request.user)
+
+        if registration_weight_id:
+            queryset = queryset.filter(registration__id=registration_weight_id)
+
+        return queryset.order_by('-id')
 
     def get_serializer_class(self):
         """Return the serializer class for request"""
