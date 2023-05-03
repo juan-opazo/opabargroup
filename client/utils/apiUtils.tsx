@@ -99,7 +99,8 @@ const createSector = async (payload: any) => {
     if (res.ok) {
       return data;
     } else {
-        throw new Error(`Error fetching data from API: ${data}`);
+        console.error(data);
+        throw new Error(`Error: ${data.detail}`);
     }
 }
 

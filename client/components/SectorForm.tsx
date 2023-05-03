@@ -10,6 +10,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import styles from '@/styles/App.module.css';
 import { useRouter } from 'next/router';
 import { apiUtils } from '@/utils/apiUtils';
+import Alert from '@mui/material/Alert';
 
 
 type Inputs = {
@@ -34,6 +35,7 @@ const style = {
 export default function SectorForm({ btnTitle }: any) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
   const [cropSelected, setCropSelected] = React.useState('');
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -47,10 +49,14 @@ export default function SectorForm({ btnTitle }: any) {
   const createSector = async (payload: any) => {
     payload.area = String(payload.area);
     payload.crop = cropSelected;
-    const data = await apiUtils.createSector(payload);
-    console.log(data);
-    router.push(`/sectores`);
-    handleClose();
+    try {
+      await apiUtils.createSector(payload);
+      router.push(`/sectores`);
+      handleClose();
+    } catch (err: any) {
+      setError(err.message);
+    }
+    
   }
 
   return (
@@ -89,6 +95,9 @@ export default function SectorForm({ btnTitle }: any) {
               <MenuItem value="MANG">Mango</MenuItem>
             </Select>
           </div>
+
+          { error ? <Alert severity="error">{error}</Alert> : null }
+
           <Button 
             type="submit"
             sx={{ margin: '1em' }} 
