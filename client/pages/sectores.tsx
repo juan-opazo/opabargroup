@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
@@ -16,6 +16,8 @@ import Navbar from '@/components/Navbar';
 import withAuth from '@/hocs/withAuth';
 import SectorForm from '@/components/SectorForm';
 import { apiUtils } from '@/utils/apiUtils';
+import Image from 'next/image';
+
 
 interface Sector {
     name: string;
@@ -33,11 +35,15 @@ const generate = (sectors: Sector[]) => {
             // </IconButton>
             // }
         >
-            <ListItemAvatar>
-            <Avatar>
-                <FolderIcon />
-            </Avatar>
-            </ListItemAvatar>
+            <ListItemIcon>
+                <Image 
+                  alt="campo" 
+                  src="/CAMPO.png"
+                  className={styles.list_item_icon_image}
+                  width={872}
+                  height={938}
+                />
+            </ListItemIcon>
             <ListItemText
             primary={sector.name}
             secondary={`${sector.area} ha`}

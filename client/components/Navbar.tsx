@@ -32,16 +32,16 @@ const pages = [
     path: 'sectores'
   },
   {
-    label: 'Registrar Pesos',
-    path: 'registrar-pesos'
-  },
-  {
     label: 'Mis Registros',
     path: 'registros'
   },
   {
     label: 'Dashboard',
     path: 'dashboard'
+  },
+  {
+    label: 'Analisis de Suelos',
+    path: 'analisis-suelos'
   }
 ];
 const settings = [
@@ -93,9 +93,9 @@ const Navbar = () => {
                 <Image 
                   alt="opabar" 
                   src="/OPABAR_LOGO.png" 
-                  style={{width:'10rem'}}
-                  width={100}
-                  height={100}
+                  className={styles.logo_icon}
+                  width={2005}
+                  height={1191}
                   onClick={() => router.push('/')} 
                 />
             </Box>
@@ -140,9 +140,9 @@ const Navbar = () => {
               <Image 
                 alt="opabar" 
                 src="/OPABAR_LOGO.png" 
-                style={{width:'10rem'}} 
-                width={100}
-                height={100}
+                className={styles.logo_icon}
+                width={2005}
+                height={1191}
                 onClick={() => router.push('/')} 
               />
           </Box>

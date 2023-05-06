@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'sector',
     'registrationWeight',
     'recordWeight',
+    'soilAnalysis',
     'corsheaders',
 ]
 

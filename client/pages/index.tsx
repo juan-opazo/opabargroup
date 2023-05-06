@@ -46,6 +46,12 @@ export default function Home() {
         label: "Dashboard",
         alt: "dashboard",
         href: "/dashboard"
+      },
+      {
+        imgUrl: "https://opabargroup.s3.amazonaws.com/images/planta.jpg",
+        label: "Analisis de Suelos",
+        alt: "analisis de suelos",
+        href: "/analisis-suelos"
       }
     ]
     const cards = elements.map( ele => {
